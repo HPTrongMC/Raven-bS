@@ -112,3 +112,5 @@ jar {
         )
     }
 }
+
+setLibsDirName("C:\\Users\\Sentinel\\AppData\\Roaming\\.cheats\\mods")
