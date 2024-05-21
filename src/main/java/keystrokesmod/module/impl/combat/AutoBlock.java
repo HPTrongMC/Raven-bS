@@ -1,10 +1,10 @@
 package keystrokesmod.client.module.modules.combat;
 
-import keystrokesmod.client.module.Module;
+import keystrokesmod.module.Module;
 import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
-import keystrokesmod.client.utils.CoolDown;
-import keystrokesmod.client.utils.Utils;
+import keystrokesmod.client.utility.CoolDown;
+import keystrokesmod.client.utility.Utils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
