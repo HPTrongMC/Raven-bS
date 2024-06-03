@@ -75,7 +75,6 @@ public class AutoClicker extends Module {
         if (this.gs != null) {
             this.gs.setAccessible(true);
         }
-
     }
 
     public void onEnable() {
@@ -128,7 +127,6 @@ public class AutoClicker extends Module {
                     this.gd();
                 }
             }
-
         }
     }
 
@@ -198,47 +196,42 @@ public class AutoClicker extends Module {
         } else {
             this.gd();
         }
-
     }
+
+    private double baseCPS = 0.0;
 
     public void gd() {
-        double c = Utils.getRandomValue(minCPS, maxCPS, this.rand) + 0.4D * this.rand.nextDouble();
-        long d = (long) ((int) Math.round(1000.0D / c));
-        if (System.currentTimeMillis() > this.k) {
-            if (!this.n && this.rand.nextInt(100) >= 85) {
-                this.n = true;
-                this.m = 1.1D + this.rand.nextDouble() * 0.15D;
-            } else {
-                this.n = false;
-            }
+        double maxCPSValue = maxCPS.getInput();
 
-            this.k = System.currentTimeMillis() + 500L + (long) this.rand.nextInt(1500);
+        // Step 1: Generate two random values each between 20% and 60% of maxCPS
+        double randValue1 = 0.2 * maxCPSValue + this.rand.nextDouble() * 0.4 * maxCPSValue;
+        double randValue2 = 0.2 * maxCPSValue + this.rand.nextDouble() * 0.4 * maxCPSValue;
+        double addValue = 1.0 + this.rand.nextDouble() * 3.0; // Additional value between 1 and 4
+
+        // Ensure the sum of randValue1 and randValue2 plus addValue does not exceed maxCPS
+        while (randValue1 + randValue2 + addValue > maxCPSValue) {
+            randValue1 = 0.2 * maxCPSValue + this.rand.nextDouble() * 0.4 * maxCPSValue;
+            randValue2 = 0.2 * maxCPSValue + this.rand.nextDouble() * 0.4 * maxCPSValue;
+            addValue = 1.0 + this.rand.nextDouble() * 3.0;
         }
 
-        if (this.n) {
-            d = (long) ((double) d * this.m);
-        }
+        // Use the calculated sum as baseCPS
+        baseCPS = randValue1 + randValue2 + addValue;
 
-        if (System.currentTimeMillis() > this.l) {
-            if (this.rand.nextInt(100) >= 80) {
-                d += 50L + (long) this.rand.nextInt(100);
-            }
-
-            this.l = System.currentTimeMillis() + 500L + (long) this.rand.nextInt(1500);
-        }
-
-        this.j = System.currentTimeMillis() + d;
-        this.i = System.currentTimeMillis() + d / 2L - (long) this.rand.nextInt(10);
+        double minCPSValue = minCPS.getInput();
+        double cpsRange = maxCPSValue - minCPSValue;
+        this.m = (cpsRange * 0.1) + this.rand.nextDouble() * (cpsRange * 0.15);
+        this.k = (long) (1000.0 / (baseCPS + this.m));
+        this.l = this.k + 50L + (long) (this.rand.nextDouble() * 30.0);
+        this.i = System.currentTimeMillis() + this.k;
+        this.j = System.currentTimeMillis() + this.l;
     }
 
-    private void inventoryClick(GuiScreen s) {
-        int x = Mouse.getX() * s.width / mc.displayWidth;
-        int y = s.height - Mouse.getY() * s.height / mc.displayHeight - 1;
-
+    private void inventoryClick(GuiScreen inv) {
         try {
-            this.gs.invoke(s, x, y, 0);
-        } catch (IllegalAccessException | InvocationTargetException var5) {
+            this.gs.invoke(inv, this.rand.nextInt(inv.width), this.rand.nextInt(inv.height), 0);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
-
     }
 }
