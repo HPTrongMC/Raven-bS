@@ -3,6 +3,7 @@ package keystrokesmod.utility;
 import keystrokesmod.module.impl.client.Settings;
 
 import java.awt.*;
+import java.util.Random;
 
 public enum Theme {
     Rainbow(null, null), // 0
@@ -16,7 +17,11 @@ public enum Theme {
     Sky(new Color(160, 230, 225), new Color(15, 190, 220)), // 8
     Vine(new Color(17, 192, 45), new Color(201, 234, 198)), // 9
     Descriptor(new Color(95, 235, 255), new Color(68, 102, 250)), // 10
-    HiddenBind(new Color(245, 33, 33), new Color(229, 21, 98)); // 11
+    HiddenBind(new Color(245, 33, 33), new Color(229, 21, 98)), // 11
+    Lime(new Color(0, 255, 0), new Color(50, 205, 50)), // 12
+    Candy(new Color(255, 182, 193), new Color(255, 105, 180)), // 13
+    White(new Color(255, 255, 255), new Color(255, 255, 255)), // 14
+    RandomColor(generateRandomColor(), generateRandomColor()); // 15
 
     private final Color firstGradient;
     private final Color secondGradient;
@@ -27,7 +32,9 @@ public enum Theme {
     }
 
     public static int getGradient(int index, double delay) {
-        if (index > 0) {
+        if (index == 15) { // Special handling for RandomColor theme
+            return convert(generateRandomColor(), generateRandomColor(), (Math.sin(System.currentTimeMillis() / 1.0E8 * Settings.timeMultiplier.getInput() * 400000.0 + delay * 0.550000011920929) + 1.0) * 0.5).getRGB();
+        } else if (index > 0) {
             return convert(values()[index].firstGradient, values()[index].secondGradient, (Math.sin(System.currentTimeMillis() / 1.0E8 * Settings.timeMultiplier.getInput() * 400000.0 + delay * 0.550000011920929) + 1.0) * 0.5).getRGB();
         } else if (index == 0) {
             return Utils.getChroma(2, (long) delay);
@@ -54,6 +61,11 @@ public enum Theme {
         return new int[]{0, 0};
     }
 
-    //public static String[] themes = new String[]{"Rainbow", "Cherry", "Cotton candy", "Flare", "Flower", "Grayscale", "Royal", "Sky"};
-    public static String[] themes = new String[]{"Rainbow", "Cherry", "Cotton candy", "Flare", "Flower", "Gold", "Grayscale", "Royal", "Sky", "Vine"};
+    private static Color generateRandomColor() {
+        Random rand = new Random();
+        return new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+    }
+
+    // public static String[] themes = new String[]{"Rainbow", "Cherry", "Cotton candy", "Flare", "Flower", "Grayscale", "Royal", "Sky"};
+    public static String[] themes = new String[]{"Rainbow", "Cherry", "Cotton candy", "Flare", "Flower", "Gold", "Grayscale", "Royal", "Sky", "Vine", "Lime", "Candy", "White", "Random"};
 }
