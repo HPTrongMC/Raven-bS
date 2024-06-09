@@ -379,18 +379,12 @@ public class BedAura extends Module {
                 if (mode.getInput() == 0) {
                     setSlot(Utils.getTool(block));
                 }
-                if (silentSwing.isToggled()) {
-                    swing();
-                }
                 startBreak(blockPos);
             }
             else if (breakProgress >= 1) {
                 if (mode.getInput() == 2) {
                     ModuleManager.killAura.resetBlinkState(false);
                     setPacketSlot(Utils.getTool(block));
-                }
-                if (silentSwing.isToggled()) {
-                    swing();
                 }
                 stopBreak(blockPos);
                 reset(false);
@@ -432,10 +426,11 @@ public class BedAura extends Module {
         else if (mode.getInput() == 1) {
             stopAutoblock = true;
             rotate = true;
-            swing();
+            if (!silentSwing.isToggled()) {
+                swing();
+            }
             startBreak(blockPos);
             setSlot(Utils.getTool(block));
-            swing();
             stopBreak(blockPos);
         }
     }
