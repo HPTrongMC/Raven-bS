@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 
 public class AutoPlace extends Module {
-    private DescriptionSetting description;
     private SliderSetting frameDelay;
     private SliderSetting minPlaceDelay;
     private ButtonSetting disableLeft;
@@ -37,7 +36,7 @@ public class AutoPlace extends Module {
 
     public AutoPlace() {
         super("AutoPlace", Module.category.player, 0);
-        this.registerSetting(description = new DescriptionSetting("Best with safewalk."));
+        this.registerSetting(new DescriptionSetting("Best with safewalk."));
         this.registerSetting(frameDelay = new SliderSetting("Frame delay", 8.0D, 0.0D, 30.0D, 1.0D));
         this.registerSetting(minPlaceDelay = new SliderSetting("Min place delay", 60.0, 25.0, 500.0, 5.0));
         this.registerSetting(disableLeft = new ButtonSetting("Disable left", false));

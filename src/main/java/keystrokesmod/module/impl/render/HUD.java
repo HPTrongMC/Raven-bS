@@ -21,9 +21,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class HUD extends Module {
-    private DescriptionSetting description;
     public static SliderSetting theme;
-    private ButtonSetting editPosition;
     public static ButtonSetting dropShadow;
     public static ButtonSetting alphabeticalSort;
     private static ButtonSetting alignRight;
@@ -36,9 +34,9 @@ public class HUD extends Module {
 
     public HUD() {
         super("HUD", Module.category.render);
-        this.registerSetting(description = new DescriptionSetting("Right click bind to hide modules."));
+        this.registerSetting(new DescriptionSetting("Right click bind to hide modules."));
         this.registerSetting(theme = new SliderSetting("Theme", Theme.themes, 0));
-        this.registerSetting(editPosition = new ButtonSetting("Edit position", () -> {
+        this.registerSetting(new ButtonSetting("Edit position", () -> {
             mc.displayGuiScreen(new EditScreen());
         }));
         this.registerSetting(alignRight = new ButtonSetting("Align right", false));

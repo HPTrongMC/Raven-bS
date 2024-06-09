@@ -6,13 +6,12 @@ import keystrokesmod.module.setting.impl.SliderSetting;
 import net.minecraft.entity.Entity;
 
 public class Reduce extends Module {
-    private DescriptionSetting description;
     private static SliderSetting chance;
     private static SliderSetting reduction;
 
     public Reduce() {
         super("Reduce", category.combat);
-        this.registerSetting(description = new DescriptionSetting("Overrides KeepSprint."));
+        this.registerSetting(new DescriptionSetting("Overrides KeepSprint."));
         this.registerSetting(reduction = new SliderSetting("Attack reduction %", 60.0, 60.0, 100.0, 0.5));
         this.registerSetting(chance = new SliderSetting("Chance", 100.0, 0.0, 100.0, 1.0, "%"));
     }

@@ -56,7 +56,7 @@ public abstract class MixinRendererLivingEntity<T extends EntityLivingBase> exte
                 if (p_renderModel_1_ != Minecraft.getMinecraft().thePlayer && !AntiBot.isBot(p_renderModel_1_)) {
                     GlStateManager.pushMatrix();
                     int color;
-                    if (ModuleManager.playerESP.colorByName.isToggled()) {
+                    if (ModuleManager.playerESP.teamColor.isToggled()) {
                         color = ModuleManager.playerESP.getColorFromTags(p_renderModel_1_.getDisplayName().getFormattedText());
                     }
                     else if (ModuleManager.playerESP.rainbow.isToggled()) {
@@ -64,6 +64,9 @@ public abstract class MixinRendererLivingEntity<T extends EntityLivingBase> exte
                     }
                     else {
                         color = (new Color((int) ModuleManager.playerESP.red.getInput(), (int) ModuleManager.playerESP.green.getInput(), (int) ModuleManager.playerESP.blue.getInput())).getRGB();
+                    }
+                    if (ModuleManager.playerESP.redOnDamage.isToggled() && p_renderModel_1_.hurtTime != 0) {
+                        color = Color.RED.getRGB();
                     }
                     glColor(color);
                     this.mainModel.render(p_renderModel_1_, p_renderModel_2_, p_renderModel_3_, p_renderModel_4_, p_renderModel_5_, p_renderModel_6_, p_renderModel_7_);

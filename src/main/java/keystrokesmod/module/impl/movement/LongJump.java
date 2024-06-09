@@ -23,6 +23,7 @@ public class LongJump extends Module {
     private ButtonSetting addMotion;
     private ButtonSetting invertYaw;
     private ButtonSetting jump;
+    private ButtonSetting stopMotion;
     private int lastSlot = -1;
     private int ticks = -1;
     private boolean setSpeed;
@@ -40,6 +41,7 @@ public class LongJump extends Module {
         this.registerSetting(addMotion = new ButtonSetting("Add motion", false));
         this.registerSetting(invertYaw = new ButtonSetting("Invert yaw", true));
         this.registerSetting(jump = new ButtonSetting("Jump", false));
+        this.registerSetting(stopMotion = new ButtonSetting("Stop motion on disable", false));
     }
 
     @SubscribeEvent
@@ -97,6 +99,11 @@ public class LongJump extends Module {
                 }
             }
             if (ticks > motionTicks.getInput()) {
+                if (stopMotion.isToggled()) {
+                    mc.thePlayer.motionX = 0;
+                    mc.thePlayer.motionY = 0;
+                    mc.thePlayer.motionZ = 0;
+                }
                 this.disable();
                 return;
             }
@@ -114,6 +121,11 @@ public class LongJump extends Module {
                 if (ticks > motionTicks.getInput()) {
                     stopModules = setSpeed = false;
                     ticks = 0;
+                    if (stopMotion.isToggled()) {
+                        mc.thePlayer.motionX = 0;
+                        mc.thePlayer.motionY = 0;
+                        mc.thePlayer.motionZ = 0;
+                    }
                     return;
                 }
                 stopModules = true;

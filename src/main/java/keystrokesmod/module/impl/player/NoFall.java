@@ -5,15 +5,14 @@ import keystrokesmod.module.Module;
 import keystrokesmod.module.setting.impl.ButtonSetting;
 import keystrokesmod.module.setting.impl.SliderSetting;
 import keystrokesmod.utility.Utils;
-import net.minecraft.block.BlockAir;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class NoFall extends Module {
     public SliderSetting mode;
     private SliderSetting minFallDistance;
+    private ButtonSetting disableAdventure;
     private ButtonSetting ignoreVoid;
     private String[] modes = new String[]{"Spoof", "Extra", "NoGround"};
 
@@ -21,11 +20,15 @@ public class NoFall extends Module {
         super("NoFall", category.player);
         this.registerSetting(mode = new SliderSetting("Mode", modes, 0));
         this.registerSetting(minFallDistance = new SliderSetting("Minimum fall distance", 3.0, 0.0, 8.0, 0.1));
+        this.registerSetting(disableAdventure = new ButtonSetting("Disable adventure", false));
         this.registerSetting(ignoreVoid = new ButtonSetting("Ignore void", true));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPreMotion(PreMotionEvent e) {
+        if (disableAdventure.isToggled() && mc.playerController.getCurrentGameType().isAdventure()) {
+            return;
+        }
         if (ignoreVoid.isToggled() && isVoid()) {
             return;
         }
@@ -42,6 +45,9 @@ public class NoFall extends Module {
     }
 
     public void onUpdate() {
+        if (disableAdventure.isToggled() && mc.playerController.getCurrentGameType().isAdventure()) {
+            return;
+        }
         if (ignoreVoid.isToggled() && isVoid()) {
             return;
         }

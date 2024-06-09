@@ -13,17 +13,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class BurstClicker extends Module {
-    public static DescriptionSetting artificialDragClicking;
-    public static SliderSetting clicks;
-    public static SliderSetting delay;
-    public static ButtonSetting delayRandomizer;
-    public static ButtonSetting placeWhenBlock;
+    private SliderSetting clicks;
+    private SliderSetting delay;
+    private ButtonSetting delayRandomizer;
+    private ButtonSetting placeWhenBlock;
     private boolean l_c = false;
     private boolean l_r = false;
 
     public BurstClicker() {
-        super("BurstClicker", Module.category.combat, 0);
-        this.registerSetting(artificialDragClicking = new DescriptionSetting("Artificial dragclicking."));
+        super("BurstClicker", category.combat, 0);
+        this.registerSetting(new DescriptionSetting("Artificial dragclicking."));
         this.registerSetting(clicks = new SliderSetting("Clicks", 0.0D, 0.0D, 50.0D, 1.0D));
         this.registerSetting(delay = new SliderSetting("Delay (ms)", 5.0D, 1.0D, 40.0D, 1.0D));
         this.registerSetting(delayRandomizer = new ButtonSetting("Delay randomizer", true));

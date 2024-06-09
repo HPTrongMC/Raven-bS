@@ -10,16 +10,14 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AutoWho extends Module {
-    private DescriptionSetting description;
-    private DescriptionSetting nickDescription;
     private ButtonSetting artifical;
     private ButtonSetting hideMessage;
     private ButtonSetting removeBots;
 
     public AutoWho() {
         super("AutoWho", category.minigames);
-        this.registerSetting(description = new DescriptionSetting("Automatically execute /who."));
-        this.registerSetting(nickDescription = new DescriptionSetting(Utils.formatColor("Use '&enick [nick]&r' when nicked.")));
+        this.registerSetting(new DescriptionSetting("Automatically execute /who."));
+        this.registerSetting(new DescriptionSetting(Utils.formatColor("Use '&enick [nick]&r' when nicked.")));
         this.registerSetting(artifical = new ButtonSetting("Artificial", false));
         this.registerSetting(hideMessage = new ButtonSetting("Hide message", false));
         this.registerSetting(removeBots = new ButtonSetting("Remove bots", true));

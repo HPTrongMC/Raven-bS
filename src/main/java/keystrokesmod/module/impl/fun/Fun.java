@@ -17,14 +17,14 @@ import java.util.Iterator;
 
 public class Fun {
     public static class Spin extends Module {
-        public SliderSetting a;
-        public SliderSetting b;
+        public SliderSetting rotation;
+        public SliderSetting speed;
         private float yaw;
 
         public Spin() {
             super("Spin", category.fun, 0);
-            this.registerSetting(a = new SliderSetting("Rotation", 360.0D, 30.0D, 360.0D, 1.0D));
-            this.registerSetting(b = new SliderSetting("Speed", 25.0D, 1.0D, 60.0D, 1.0D));
+            this.registerSetting(rotation = new SliderSetting("Rotation", 360.0D, 30.0D, 360.0D, 1.0D));
+            this.registerSetting(speed = new SliderSetting("Speed", 25.0D, 1.0D, 60.0D, 1.0D));
         }
 
         public void onEnable() {
@@ -36,16 +36,16 @@ public class Fun {
         }
 
         public void onUpdate() {
-            double left = (double) this.yaw + a.getInput() - (double) mc.thePlayer.rotationYaw;
+            double left = (double) this.yaw + rotation.getInput() - (double) mc.thePlayer.rotationYaw;
             EntityPlayerSP var10000;
-            if (left < b.getInput()) {
+            if (left < speed.getInput()) {
                 var10000 = mc.thePlayer;
                 var10000.rotationYaw = (float) ((double) var10000.rotationYaw + left);
                 this.disable();
             } else {
                 var10000 = mc.thePlayer;
-                var10000.rotationYaw = (float) ((double) var10000.rotationYaw + b.getInput());
-                if ((double) mc.thePlayer.rotationYaw >= (double) this.yaw + a.getInput()) {
+                var10000.rotationYaw = (float) ((double) var10000.rotationYaw + speed.getInput());
+                if ((double) mc.thePlayer.rotationYaw >= (double) this.yaw + rotation.getInput()) {
                     this.disable();
                 }
             }
@@ -54,19 +54,17 @@ public class Fun {
     }
 
     public static class SlyPort extends Module {
-        public DescriptionSetting f;
-        public SliderSetting r;
-        public ButtonSetting b;
+        public SliderSetting range;
+        public ButtonSetting playSound;
         public ButtonSetting playersOnly;
-        public ButtonSetting e;
-        private boolean s = false;
+        public ButtonSetting aim;
 
         public SlyPort() {
             super("SlyPort", Module.category.fun, 0);
-            this.registerSetting(f = new DescriptionSetting("Teleport behind enemies."));
-            this.registerSetting(r = new SliderSetting("Range", 6.0D, 2.0D, 15.0D, 1.0D));
-            this.registerSetting(e = new ButtonSetting("Aim", true));
-            this.registerSetting(b = new ButtonSetting("Play sound", true));
+            this.registerSetting(new DescriptionSetting("Teleport behind enemies."));
+            this.registerSetting(range = new SliderSetting("Range", 6.0D, 2.0D, 15.0D, 1.0D));
+            this.registerSetting(aim = new ButtonSetting("Aim", true));
+            this.registerSetting(playSound = new ButtonSetting("Play sound", true));
             this.registerSetting(playersOnly = new ButtonSetting("Players only", true));
         }
 
@@ -80,7 +78,7 @@ public class Fun {
         }
 
         private void tp(Entity en) {
-            if (b.isToggled()) {
+            if (playSound.isToggled()) {
                 mc.thePlayer.playSound("mob.endermen.portal", 1.0F, 1.0F);
             }
 
@@ -88,7 +86,7 @@ public class Fun {
             double x = en.posX - vec.xCoord * 2.5D;
             double z = en.posZ - vec.zCoord * 2.5D;
             mc.thePlayer.setPosition(x, mc.thePlayer.posY, z);
-            if (e.isToggled()) {
+            if (aim.isToggled()) {
                 Utils.aim(en, 0.0F, false);
             }
 
@@ -96,7 +94,7 @@ public class Fun {
 
         private Entity ge() {
             Entity en = null;
-            double r = Math.pow(this.r.getInput(), 2.0D);
+            double r = Math.pow(this.range.getInput(), 2.0D);
             double dist = r + 1.0D;
             Iterator var6 = mc.theWorld.loadedEntityList.iterator();
 
@@ -131,7 +129,7 @@ public class Fun {
         public SliderSetting a;
 
         public FlameTrail() {
-            super("Flame Trail", Module.category.fun, 0);
+            super("Flame Trail", category.fun, 0);
         }
 
         public void onUpdate() {
@@ -148,7 +146,7 @@ public class Fun {
         private boolean b;
 
         public ExtraBobbing() {
-            super("Extra Bobbing", Module.category.fun, 0);
+            super("Extra Bobbing", category.fun, 0);
             this.registerSetting(level = new SliderSetting("Level", 1.0D, 0.0D, 8.0D, 0.1D));
         }
 

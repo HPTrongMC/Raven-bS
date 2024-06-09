@@ -4,11 +4,13 @@ import keystrokesmod.module.Module;
 import keystrokesmod.module.setting.impl.ButtonSetting;
 import keystrokesmod.module.setting.impl.SliderSetting;
 import keystrokesmod.utility.Utils;
+import net.minecraftforge.event.world.BlockEvent;
 import org.lwjgl.input.Keyboard;
 
 public class BHop extends Module {
     private SliderSetting mode;
     public static SliderSetting speed;
+    private ButtonSetting autoJump;
     private ButtonSetting liquidDisable;
     private ButtonSetting sneakDisable;
     private ButtonSetting stopMotion;
@@ -19,6 +21,7 @@ public class BHop extends Module {
         super("Bhop", Module.category.movement);
         this.registerSetting(mode = new SliderSetting("Mode", modes, 0));
         this.registerSetting(speed = new SliderSetting("Speed", 2.0, 0.5, 8.0, 0.1));
+        this.registerSetting(autoJump = new ButtonSetting("Auto jump", true));
         this.registerSetting(liquidDisable = new ButtonSetting("Disable in liquid", true));
         this.registerSetting(sneakDisable = new ButtonSetting("Disable while sneaking", true));
         this.registerSetting(stopMotion = new ButtonSetting("Stop motion", false));
@@ -36,7 +39,7 @@ public class BHop extends Module {
         switch ((int) mode.getInput()) {
             case 0:
                 if (Utils.isMoving()) {
-                    if (mc.thePlayer.onGround) {
+                    if (mc.thePlayer.onGround && autoJump.isToggled()) {
                         mc.thePlayer.jump();
                     }
                     mc.thePlayer.setSprinting(true);
@@ -50,7 +53,12 @@ public class BHop extends Module {
                     if (!mc.thePlayer.onGround) {
                         break;
                     }
-                    mc.thePlayer.jump();
+                    if (autoJump.isToggled()) {
+                        mc.thePlayer.jump();
+                    }
+                    else if (!Keyboard.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode()) && !autoJump.isToggled()) {
+                        return;
+                    }
                     mc.thePlayer.setSprinting(true);
                     double horizontalSpeed = Utils.getHorizontalSpeed();
                     double additionalSpeed = 0.4847 * ((speed.getInput() - 1.0) / 3.0 + 1.0);

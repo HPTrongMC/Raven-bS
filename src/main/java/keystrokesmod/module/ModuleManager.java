@@ -49,8 +49,10 @@ public class ModuleManager {
     public static Module keepSprint;
     public static Module antiKnockback;
     public static Tower tower;
+    public static NoCameraClip noCameraClip;
     public static Module bedwars;
     public static BHop bHop;
+    public static NoHurtCam noHurtCam;
     public static Scaffold scaffold;
 
     public void register() {
@@ -74,6 +76,7 @@ public class ModuleManager {
         this.addModule(new AntiAFK());
         this.addModule(new Boost());
         this.addModule(new AutoTool());
+        this.addModule(noHurtCam = new NoHurtCam());
         this.addModule(fly = new Fly());
         this.addModule(new InvMove());
         this.addModule(new Trajectories());
@@ -85,6 +88,7 @@ public class ModuleManager {
         this.addModule(new Indicators());
         this.addModule(new Speed());
         this.addModule(new LatencyAlerts());
+        this.addModule(noCameraClip = new NoCameraClip());
         this.addModule(new Sprint());
         this.addModule(new StopMotion());
         this.addModule(timer = new Timer());
@@ -175,7 +179,7 @@ public class ModuleManager {
         if (HUD.alphabeticalSort.isToggled()) {
             Collections.sort(organizedModules, Comparator.comparing(Module::getName));
         } else {
-            Collections.sort(organizedModules, (o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName() + ((HUD.showInfo.isToggled() && !o2.getInfo().isEmpty()) ? " " + o2.getInfo() : "")) - Utils.mc.fontRendererObj.getStringWidth(o1.getName() + (HUD.showInfo.isToggled() && !o1.getInfo().isEmpty() ? " " + o1.getInfo() : "")));
+            organizedModules.sort((o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName() + ((HUD.showInfo.isToggled() && !o2.getInfo().isEmpty()) ? " " + o2.getInfo() : "")) - Utils.mc.fontRendererObj.getStringWidth(o1.getName() + (HUD.showInfo.isToggled() && !o1.getInfo().isEmpty() ? " " + o1.getInfo() : "")));
         }
     }
 }

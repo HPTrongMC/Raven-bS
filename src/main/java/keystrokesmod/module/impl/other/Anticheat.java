@@ -90,7 +90,7 @@ public class Anticheat extends Module {
             mc.thePlayer.playSound("note.pling", 1.0f, 1.0f);
             lastAlert = currentTimeMillis;
         }
-        if (autoReport.isToggled()) {
+        if (autoReport.isToggled() && !Utils.isFriended(entityPlayer)) {
             mc.thePlayer.sendChatMessage("/wdr " + Utils.stripColor(entityPlayer.getGameProfile().getName()));
         }
     }

@@ -172,6 +172,13 @@ public class Entity {
         return potionEffects;
     }
 
+    public ItemStack getArmorInSlot(int slot) {
+        if (!(entity instanceof EntityLivingBase)) {
+            return null;
+        }
+        return ItemStack.convert(((EntityLivingBase) entity).getCurrentArmor(slot));
+    }
+
     public double getSpeed() {
         return Utils.getHorizontalSpeed(entity);
     }

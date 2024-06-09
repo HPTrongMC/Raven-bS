@@ -16,7 +16,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class NoSlow extends Module {
-    private DescriptionSetting defaultSlowed;
     public static SliderSetting mode;
     public static SliderSetting slowed;
     public static ButtonSetting disableBow;
@@ -28,7 +27,7 @@ public class NoSlow extends Module {
 
     public NoSlow() {
         super("NoSlow", Module.category.movement, 0);
-        this.registerSetting(defaultSlowed = new DescriptionSetting("Default is 80% motion reduction."));
+        this.registerSetting(new DescriptionSetting("Default is 80% motion reduction."));
         this.registerSetting(mode = new SliderSetting("Mode", modes, 0));
         this.registerSetting(slowed = new SliderSetting("Slow %", 80.0D, 0.0D, 80.0D, 1.0D));
         this.registerSetting(disableBow = new ButtonSetting("Disable bow", false));

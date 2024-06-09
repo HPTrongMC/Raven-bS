@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class BridgeInfo extends Module {
-    public static DescriptionSetting a;
-    public static ButtonSetting ep;
     private static final int rgb = (new Color(0, 200, 200)).getRGB();
     private final String bd = new String("the brid");
     private final String g1t = new String("Defend!");
@@ -51,24 +49,18 @@ public class BridgeInfo extends Module {
 
     public BridgeInfo() {
         super("Bridge Info", Module.category.minigames, 0);
-        this.registerSetting(a = new DescriptionSetting(new String("Only for solos.")));
-        this.registerSetting(ep = new ButtonSetting("Edit position", false));
+        this.registerSetting(new DescriptionSetting(new String("Only for solos.")));
+        this.registerSetting(new ButtonSetting("Edit position", () -> {
+            mc.displayGuiScreen(new BridgeInfo.eh());
+        }));
     }
 
     public void onDisable() {
-        this.rv();
-    }
-
-    public void guiButtonToggled(ButtonSetting b) {
-        if (b == ep) {
-            ep.disable();
-            mc.displayGuiScreen(new BridgeInfo.eh());
-        }
-
+        this.reset();
     }
 
     public void onUpdate() {
-        if (!this.en.isEmpty() && this.ibd()) {
+        if (!this.en.isEmpty() && this.isBridge()) {
             EntityPlayer enem = null;
             Iterator var2 = mc.theWorld.loadedEntityList.iterator();
 
@@ -114,7 +106,7 @@ public class BridgeInfo extends Module {
 
     @SubscribeEvent
     public void a(RenderTickEvent ev) {
-        if (ev.phase == Phase.END && Utils.nullCheck() && this.ibd()) {
+        if (ev.phase == Phase.END && Utils.nullCheck() && this.isBridge()) {
             if (mc.currentScreen != null || mc.gameSettings.showDebugInfo) {
                 return;
             }
@@ -128,7 +120,7 @@ public class BridgeInfo extends Module {
     }
 
     @SubscribeEvent
-    public void o(ClientChatReceivedEvent c) {
+    public void onChat(ClientChatReceivedEvent c) {
         if (Utils.nullCheck()) {
             String s = Utils.stripColor(c.message.getUnformattedText());
             if (s.startsWith(" ")) {
@@ -151,12 +143,12 @@ public class BridgeInfo extends Module {
     @SubscribeEvent
     public void w(EntityJoinWorldEvent j) {
         if (j.entity == mc.thePlayer) {
-            this.rv();
+            this.reset();
         }
 
     }
 
-    private boolean ibd() {
+    private boolean isBridge() {
         if (Utils.isHypixel()) {
             Iterator var1 = Utils.gsl().iterator();
 
@@ -172,7 +164,7 @@ public class BridgeInfo extends Module {
         return false;
     }
 
-    private void rv() {
+    private void reset() {
         this.en = "";
         this.q = false;
         this.g1p = null;

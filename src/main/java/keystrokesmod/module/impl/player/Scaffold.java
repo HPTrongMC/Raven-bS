@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.HashMap;
@@ -53,13 +54,14 @@ public class Scaffold extends Module { // from b4 :)
     private boolean forceStrict;
     private boolean down;
     private int add;
+    private boolean wasTowering;
     public Scaffold() {
         super("Scaffold", category.player);
         this.registerSetting(motion = new SliderSetting("Motion", 1.0, 0.5, 1.2, 0.01));
         this.registerSetting(rotation = new SliderSetting("Rotation", rotationModes, 1));
         this.registerSetting(fastScaffold = new SliderSetting("Fast scaffold", fastScaffoldModes, 0));
-        //this.registerSetting(delayOnJump = new ButtonSetting("Delay on jump", true));
         this.registerSetting(autoSwap = new ButtonSetting("AutoSwap", true));
+        this.registerSetting(delayOnJump = new ButtonSetting("Delay on jump", true));
         this.registerSetting(fastOnRMB = new ButtonSetting("Fast on RMB", false));
         this.registerSetting(highlightBlocks = new ButtonSetting("Highlight blocks", true));
         this.registerSetting(multiPlace = new ButtonSetting("Multi-place", false));
@@ -75,6 +77,7 @@ public class Scaffold extends Module { // from b4 :)
             mc.thePlayer.inventory.currentItem = lastSlot;
             lastSlot = -1;
         }
+        wasTowering = false;
         highlight.clear();
         at = index = 0;
         add = 0;
@@ -92,6 +95,13 @@ public class Scaffold extends Module { // from b4 :)
     public void onPreMotion(PreMotionEvent event) {
         if (!Utils.nullCheck()) {
             return;
+        }
+        if (Keyboard.isKeyDown(mc.gameSettings.keyBindJump.getKeyCode())) {
+            wasTowering = true;
+        }
+        else if (wasTowering && delayOnJump.isToggled()) {
+            Utils.setSpeed(0);
+            wasTowering = false;
         }
         if (rotation.getInput() > 0) {
             if ((rotation.getInput() == 2 && forceStrict) || rotation.getInput() == 3) {

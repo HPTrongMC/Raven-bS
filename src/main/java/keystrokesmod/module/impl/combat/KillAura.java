@@ -91,7 +91,7 @@ public class KillAura extends Module {
         this.registerSetting(swingRange = new SliderSetting("Range (swing)", 3.3, 3.0, 8.0, 0.05));
         this.registerSetting(blockRange = new SliderSetting("Range (block)", 6.0, 3.0, 12.0, 0.05));
         this.registerSetting(rotationMode = new SliderSetting("Rotation mode", rotationModes, 0));
-        this.registerSetting(rotationSmoothing = new SliderSetting("Rotation smoothing", 0, 0, 100, 1));
+        this.registerSetting(rotationSmoothing = new SliderSetting("Rotation smoothing", 0, 0, 15, 1));
         this.registerSetting(sortMode = new SliderSetting("Sort mode", sortModes, 0.0));
         this.registerSetting(switchDelay = new SliderSetting("Switch delay", 200.0, 50.0, 1000.0, 25.0, "ms"));
         this.registerSetting(targets = new SliderSetting("Targets", 3.0, 1.0, 10.0, 1.0));
@@ -262,12 +262,12 @@ public class KillAura extends Module {
         setTarget(new float[]{e.getYaw(), e.getPitch()});
         if (target != null && rotationMode.getInput() == 1) {
             float[] rotations = RotationUtils.getRotations(target, e.getYaw(), e.getPitch());
-            if (rotationSmoothing.getInput() >= 4) {
+            if (rotationSmoothing.getInput() > 0) {
                 if (!startSmoothing) {
                     prevRotations = new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch};
                     startSmoothing = true;
                 }
-                float[] speed = new float[]{(float) ((rotations[0] - prevRotations[0]) / ((rotationSmoothing.getInput()) * 0.262843)), (float) ((rotations[1] - prevRotations[1]) / ((rotationSmoothing.getInput()) * 0.1637))};
+                float[] speed = new float[]{(float) ((rotations[0] - prevRotations[0]) / Math.max(((rotationSmoothing.getInput()) * 0.262843), 1.5)), (float) ((rotations[1] - prevRotations[1]) / Math.max(((rotationSmoothing.getInput()) * 0.1637), 1.5))};
                 prevRotations[0] += speed[0];
                 prevRotations[1] += speed[1];
                 if (prevRotations[1] > 90) {
@@ -307,6 +307,9 @@ public class KillAura extends Module {
         }
         Packet packet = e.getPacket();
         if (packet.getClass().getSimpleName().startsWith("S")) {
+            return;
+        }
+        if (packet instanceof C00PacketKeepAlive) {
             return;
         }
         blinkedPackets.add(e.getPacket());
@@ -361,7 +364,7 @@ public class KillAura extends Module {
     }
 
     private boolean aimingEntity() {
-        if (rotationMode.getInput() > 0 && ((rotationSmoothing.getInput() >= 4 && rotationMode.getInput() == 1) || rotationSmoothing.getInput() > 0)) {
+        if (rotationMode.getInput() > 0 && rotationSmoothing.getInput() > 0) {
             Object[] raycast = Reach.getEntity(attackRange.getInput(), 0, rotationMode.getInput() == 1 ? prevRotations : null);
             if (raycast == null || raycast[0] != target) {
                 return false;
@@ -470,7 +473,7 @@ public class KillAura extends Module {
                 continue;
             }
             double distance = mc.thePlayer.getDistanceSqToEntity(entity); // need a more accurate distance check as this can ghost on hypixel
-            if (distance <= blockRange.getInput() * blockRange.getInput() && autoBlockMode.getInput() > 0) {
+            if (distance <= blockRange.getInput() * blockRange.getInput() && autoBlockMode.getInput() > 0 && Utils.holdingSword()) {
                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                 block.set(true);
             }
@@ -642,7 +645,7 @@ public class KillAura extends Module {
                 }
                 break;
             case 1:
-                if ((rotationSmoothing.getInput() >= 4 && rotationMode.getInput() == 1) || rotationSmoothing.getInput() > 0) {
+                if (rotationSmoothing.getInput() > 0) {
                     return RotationUtils.rayCast(attackRange.getInput(), prevRotations != null ? prevRotations[0] : mc.thePlayer.rotationYaw, prevRotations != null ? prevRotations[1] : mc.thePlayer.rotationPitch) != null;
                 }
                 return RotationUtils.rayCast(attackRange.getInput(), rotations[0], rotations[1]) != null;

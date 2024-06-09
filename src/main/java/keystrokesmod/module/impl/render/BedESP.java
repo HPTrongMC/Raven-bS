@@ -28,6 +28,7 @@ public class BedESP extends Module {
     private SliderSetting range;
     private SliderSetting rate;
     private ButtonSetting firstBed;
+    private ButtonSetting renderFullBlock;
     private BlockPos[] bed = null;
     private List<BlockPos[]> beds = new ArrayList<>();
     private long lastCheck = 0;
@@ -35,9 +36,10 @@ public class BedESP extends Module {
     public BedESP() {
         super("BedESP", category.render);
         this.registerSetting(theme = new SliderSetting("Theme", Theme.themes, 0));
-        this.registerSetting(range = new SliderSetting("Range", 10.0, 2.0, 30.0, 1.0));
+        this.registerSetting(range = new SliderSetting("Range", 10.0, 2.0, 30.0, 2.0));
         this.registerSetting(rate = new SliderSetting("Rate", 0.4, 0.1, 3.0, 0.1, " second"));
         this.registerSetting(firstBed = new ButtonSetting("Only render first bed", false));
+        this.registerSetting(renderFullBlock = new ButtonSetting("Render full block", false));
     }
 
     public void onUpdate() {
@@ -131,19 +133,23 @@ public class BedESP extends Module {
         AxisAlignedBB axisAlignedBB;
         if (array[0].getX() != array[1].getX()) {
             if (array[0].getX() > array[1].getX()) {
-                axisAlignedBB = new AxisAlignedBB(n - 1.0, n2, n3, n + 1.0, n2 + 0.5625F, n3 + 1.0);
+                axisAlignedBB = new AxisAlignedBB(n - 1.0, n2, n3, n + 1.0, n2 + getBlockHeight(), n3 + 1.0);
             } else {
-                axisAlignedBB = new AxisAlignedBB(n, n2, n3, n + 2.0, n2 + 0.5625F, n3 + 1.0);
+                axisAlignedBB = new AxisAlignedBB(n, n2, n3, n + 2.0, n2 + getBlockHeight(), n3 + 1.0);
             }
         } else if (array[0].getZ() > array[1].getZ()) {
-            axisAlignedBB = new AxisAlignedBB(n, n2, n3 - 1.0, n + 1.0, n2 + 0.5625F, n3 + 1.0);
+            axisAlignedBB = new AxisAlignedBB(n, n2, n3 - 1.0, n + 1.0, n2 + getBlockHeight(), n3 + 1.0);
         } else {
-            axisAlignedBB = new AxisAlignedBB(n, n2, n3, n + 1.0, n2 + 0.5625F, n3 + 2.0);
+            axisAlignedBB = new AxisAlignedBB(n, n2, n3, n + 1.0, n2 + getBlockHeight(), n3 + 2.0);
         }
         RenderUtils.drawBoundingBox(axisAlignedBB, n5, n6, n7);
         GL11.glEnable(3553);
         GL11.glEnable(2929);
         GL11.glDepthMask(true);
         GL11.glDisable(3042);
+    }
+
+    private float getBlockHeight() {
+        return (renderFullBlock.isToggled() ? 1 : 0.5625F);
     }
 }

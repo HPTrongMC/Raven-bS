@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.awt.*;
 
 public class TargetHUD extends Module {
-    private DescriptionSetting description;
     private SliderSetting theme;
     private ButtonSetting renderEsp;
     private ButtonSetting showStatus;
@@ -33,7 +32,7 @@ public class TargetHUD extends Module {
 
     public TargetHUD() {
         super("TargetHUD", category.render);
-        this.registerSetting(description = new DescriptionSetting("Only works with KillAura."));
+        this.registerSetting(new DescriptionSetting("Only works with KillAura."));
         this.registerSetting(theme = new SliderSetting("Theme", Theme.themes, 0));
         this.registerSetting(renderEsp = new ButtonSetting("Render ESP", true));
         this.registerSetting(showStatus = new ButtonSetting("Show win or loss", true));
@@ -70,7 +69,7 @@ public class TargetHUD extends Module {
             String playerInfo = target.getDisplayName().getFormattedText();
             double health = target.getHealth() / target.getMaxHealth();
             if (health != lastHealth) {
-                (healthBarTimer = new Timer(400)).start();
+                (healthBarTimer = new Timer(350)).start();
             }
             lastHealth = health;
             playerInfo += " " + Utils.getHealthStr(target);
