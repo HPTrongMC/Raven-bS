@@ -15,18 +15,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class AntiBot extends Module {
     private static final HashMap<EntityPlayer, Long> entities = new HashMap();
     private static ButtonSetting entitySpawnDelay;
-    private static SliderSetting delay;
+    private SliderSetting delay;
+    private static ButtonSetting pitSpawn;
     private static ButtonSetting tablist;
 
     public AntiBot() {
         super("AntiBot", Module.category.world, 0);
         this.registerSetting(entitySpawnDelay = new ButtonSetting("Entity spawn delay", false));
         this.registerSetting(delay = new SliderSetting("Delay", 7.0, 0.5, 15.0, 0.5, " second"));
+        this.registerSetting(pitSpawn = new ButtonSetting("Pit spawn", false));
         this.registerSetting(tablist = new ButtonSetting("Tab list", false));
     }
 
@@ -39,7 +40,7 @@ public class AntiBot extends Module {
 
     public void onUpdate() {
         if (entitySpawnDelay.isToggled() && !entities.isEmpty()) {
-            entities.values().removeIf(n -> n < System.currentTimeMillis() - 7000L);
+            entities.values().removeIf(n -> n < System.currentTimeMillis() - delay.getInput());
         }
     }
 
@@ -72,6 +73,14 @@ public class AntiBot extends Module {
         }
         if (entityPlayer.getHealth() != 20.0f && entityPlayer.getName().startsWith("§c")) {
             return true;
+        }
+        if (pitSpawn.isToggled() && entityPlayer.posY >= 114 && entityPlayer.posY <= 130 && entityPlayer.getDistance(0, 114, 0) <= 25) {
+            if (Utils.isHypixel()) {
+                List<String> sidebarLines = Utils.getSidebarLines();
+                if (!sidebarLines.isEmpty() && Utils.stripColor(sidebarLines.get(0)).contains("THE HYPIXEL PIT")) {
+                    return true;
+                }
+            }
         }
         if (entityPlayer.maxHurtTime == 0) {
             if (entityPlayer.getHealth() == 20.0f) {

@@ -257,10 +257,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         float f = 0.8F;
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
-        boolean usingItemModified = false;
-        if (this.isUsingItem() || (ModuleManager.killAura != null && ModuleManager.killAura.isEnabled() && ModuleManager.killAura.block.get() && ModuleManager.killAura.rmbDown && ModuleManager.killAura.manualBlock.isToggled())) {
-            usingItemModified = true;
-        }
         boolean stopSprint = ModuleManager.noSlow == null || !ModuleManager.noSlow.isEnabled() || NoSlow.slowed.getInput() == 80;
         if ((this.isUsingItem() || (ModuleManager.killAura != null && ModuleManager.killAura.isEnabled() && ModuleManager.killAura.block.get() && ModuleManager.killAura.rmbDown && ModuleManager.killAura.manualBlock.isToggled())) && !this.isRiding()) {
             MovementInput var10000 = this.movementInput;
@@ -278,7 +274,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         this.pushOutOfBlocks(this.posX + (double) this.width * 0.35, this.getEntityBoundingBox().minY + 0.5, this.posZ - (double) this.width * 0.35);
         this.pushOutOfBlocks(this.posX + (double) this.width * 0.35, this.getEntityBoundingBox().minY + 0.5, this.posZ + (double) this.width * 0.35);
         boolean flag3 = (float) this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
-        if (this.onGround && !flag1 && !flag2 && this.movementInput.moveForward >= f && !this.isSprinting() && flag3 && (!usingItemModified || !stopSprint) && !this.isPotionActive(Potion.blindness)) {
+        if (this.onGround && !flag1 && !flag2 && this.movementInput.moveForward >= f && !this.isSprinting() && flag3 && (!(this.isUsingItem() || (ModuleManager.killAura != null && ModuleManager.killAura.isEnabled() && ModuleManager.killAura.block.get() && ModuleManager.killAura.rmbDown && ModuleManager.killAura.manualBlock.isToggled())) || !stopSprint) && !this.isPotionActive(Potion.blindness)) {
             if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
                 this.sprintToggleTimer = 7;
             } else {
@@ -286,7 +282,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
             }
         }
 
-        if ((!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && (!usingItemModified || !stopSprint) && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.isKeyDown())) {
+        if ((!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && (!(this.isUsingItem() || (ModuleManager.killAura != null && ModuleManager.killAura.isEnabled() && ModuleManager.killAura.block.get() && ModuleManager.killAura.rmbDown && ModuleManager.killAura.manualBlock.isToggled())) || !stopSprint) && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.isKeyDown())) {
             this.setSprinting(true);
         }
 

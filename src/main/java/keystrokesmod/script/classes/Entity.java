@@ -7,6 +7,7 @@ import net.minecraft.block.BlockLadder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
@@ -132,6 +133,9 @@ public class Entity {
     }
 
     public String getName() {
+        if (entity instanceof EntityItem) {
+            return ((EntityItem) entity).getEntityItem().getItem().getRegistryName().substring(10);
+        }
         return entity.getName();
     }
 

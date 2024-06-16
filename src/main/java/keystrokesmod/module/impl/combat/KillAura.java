@@ -113,7 +113,7 @@ public class KillAura extends Module {
     }
 
     public void onDisable() {
-        resetVariables();
+        reset();
 
     }
 
@@ -145,7 +145,7 @@ public class KillAura extends Module {
     @SubscribeEvent
     public void onPreUpdate(PreUpdateEvent e) {
         if (!basicCondition() || !settingCondition()) {
-            resetVariables();
+            reset();
             return;
         }
 
@@ -256,7 +256,7 @@ public class KillAura extends Module {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPreMotion(PreMotionEvent e) {
         if (!basicCondition() || !settingCondition()) {
-            resetVariables();
+            reset();
             return;
         }
         setTarget(new float[]{e.getYaw(), e.getPitch()});
@@ -373,10 +373,11 @@ public class KillAura extends Module {
         return true;
     }
 
-    private void resetVariables() {
+    private void reset() {
         target = null;
         availableTargets.clear();
         block.set(false);
+        ModuleManager.targetHUD.renderEntity = null;
         startSmoothing = false;
         swing = false;
         rmbDown = false;
@@ -434,6 +435,7 @@ public class KillAura extends Module {
     private void setTarget(float[] rotations) {
         availableTargets.clear();
         block.set(false);
+        ModuleManager.targetHUD.renderEntity = null;
         swing = false;
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (availableTargets.size() > targets.getInput()) {
@@ -472,13 +474,15 @@ public class KillAura extends Module {
             if (n != 360.0f && !Utils.inFov(n, entity)) {
                 continue;
             }
-            double distance = mc.thePlayer.getDistanceSqToEntity(entity); // need a more accurate distance check as this can ghost on hypixel
+            double distance = mc.thePlayer.getDistanceSqToEntity(entity); // need a more accurate distance check
             if (distance <= blockRange.getInput() * blockRange.getInput() && autoBlockMode.getInput() > 0 && Utils.holdingSword()) {
                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                 block.set(true);
+                ModuleManager.targetHUD.renderEntity = (EntityLivingBase) entity;
             }
             if (distance <= swingRange.getInput() * swingRange.getInput()) {
                 swing = true;
+                ModuleManager.targetHUD.renderEntity = (EntityLivingBase) entity;
             }
             if (distance > attackRange.getInput() * swingRange.getInput()) {
                 continue;
@@ -635,9 +639,9 @@ public class KillAura extends Module {
 
     private boolean behindBlocks(float[] rotations) {
         switch ((int) rotationMode.getInput()) {
-            case 2:
             case 0:
-                if (mc.objectMouseOver != null) {
+            case 2:
+                if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                     BlockPos p = mc.objectMouseOver.getBlockPos();
                     if (p != null && mc.theWorld.getBlockState(p).getBlock() != Blocks.air) {
                         return true;

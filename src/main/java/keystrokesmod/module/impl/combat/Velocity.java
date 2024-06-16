@@ -46,6 +46,9 @@ public class Velocity extends Module {
             if (disableS.isToggled() && Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode())) {
                 return;
             }
+            if (chance.getInput() == 0) {
+                return;
+            }
             if (chance.getInput() != 100) {
                 double ch = Math.random();
                 if (ch >= chance.getInput() / 100.0D) {

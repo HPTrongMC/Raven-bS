@@ -17,6 +17,9 @@ public class Reduce extends Module {
     }
 
     public static void reduce(Entity entity) {
+        if (chance.getInput() == 0) {
+            return;
+        }
         if (chance.getInput() != 100.0 && Math.random() >= chance.getInput() / 100.0) {
             mc.thePlayer.motionX *= 0.6;
             mc.thePlayer.motionZ *= 0.6;

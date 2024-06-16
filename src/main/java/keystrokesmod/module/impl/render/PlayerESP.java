@@ -30,7 +30,7 @@ public class PlayerESP extends Module {
     private ButtonSetting shaded;
     private ButtonSetting ring;
     public ButtonSetting redOnDamage;
-    private ButtonSetting renderSelf;
+    public ButtonSetting renderSelf;
     private ButtonSetting showInvis;
     private int rgb_c = 0;
     // none, outline, box, shaded, 2d, ring

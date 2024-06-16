@@ -53,7 +53,7 @@ public abstract class MixinRendererLivingEntity<T extends EntityLivingBase> exte
             }
 
             if (drawOutline && p_renderModel_1_ instanceof EntityPlayer) {
-                if (p_renderModel_1_ != Minecraft.getMinecraft().thePlayer && !AntiBot.isBot(p_renderModel_1_)) {
+                if (((p_renderModel_1_ != Minecraft.getMinecraft().thePlayer && !AntiBot.isBot(p_renderModel_1_)) || (ModuleManager.playerESP.renderSelf.isToggled() && p_renderModel_1_ == Minecraft.getMinecraft().thePlayer))) {
                     GlStateManager.pushMatrix();
                     int color;
                     if (ModuleManager.playerESP.teamColor.isToggled()) {

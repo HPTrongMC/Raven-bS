@@ -42,6 +42,7 @@ public class ModuleManager {
     public static Module fly;
     public static Module wTap;
     public static Potions potions;
+    public static TargetHUD targetHUD;
     public static NoFall noFall;
     public static PlayerESP playerESP;
     public static Module reduce;
@@ -114,7 +115,7 @@ public class ModuleManager {
         this.addModule(wTap = new WTap());
         this.addModule(new Xray());
         this.addModule(new BridgeInfo());
-        this.addModule(new TargetHUD());
+        this.addModule(targetHUD = new TargetHUD());
         this.addModule(new DuelsStats());
         this.addModule(antiFireball = new AntiFireball());
         this.addModule(bedESP = new BedESP());

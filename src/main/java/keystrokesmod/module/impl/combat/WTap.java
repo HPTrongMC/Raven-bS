@@ -27,6 +27,9 @@ public class WTap extends Module {
         if (!Utils.nullCheck() || event.entityPlayer != mc.thePlayer || !mc.thePlayer.isSprinting()) {
             return;
         }
+        if (chance.getInput() == 0) {
+            return;
+        }
         if (playersOnly.isToggled()) {
             if (!(event.target instanceof EntityPlayer)) {
                 return;

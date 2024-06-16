@@ -19,8 +19,9 @@ public class RodAimbot extends Module {
     private SliderSetting distance;
     private ButtonSetting aimInvis;
     private ButtonSetting ignoreTeammates;
-    public static boolean canceled;
-    private static EntityPlayer entity;
+    public boolean rotate;
+    private boolean rightClick;
+    private EntityPlayer entity;
 
     public RodAimbot() {
         super("RodAimbot", Module.category.combat, 0);
@@ -32,7 +33,8 @@ public class RodAimbot extends Module {
     }
 
     public void onDisable() {
-        canceled = false;
+        rotate = false;
+        rightClick = false;
         entity = null;
     }
 
@@ -49,7 +51,8 @@ public class RodAimbot extends Module {
             return;
         }
         mouseEvent.setCanceled(true);
-        canceled = true;
+        rightClick = true;
+        rotate = true;
     }
 
     @SubscribeEvent
@@ -57,15 +60,20 @@ public class RodAimbot extends Module {
         if (!Utils.nullCheck()) {
             return;
         }
-        if (canceled) {
-            canceled = false;
-            Reflection.rightClick();
+        if (rightClick || rotate) {
             if (mc.thePlayer.getCurrentEquippedItem() == null || !(mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemFishingRod)) {
                 return;
             }
             float[] rotations = RotationUtils.getRotationsPredicated(entity, (int)predicatedTicks.getInput());
             event.setYaw(rotations[0]);
             event.setPitch(rotations[1]);
+            if (!rightClick && rotate) {
+                rotate = false;
+            }
+            if (rightClick) {
+                Reflection.rightClick();
+                rightClick = false;
+            }
         }
     }
 

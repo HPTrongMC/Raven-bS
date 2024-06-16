@@ -1,5 +1,6 @@
 package keystrokesmod.module.impl.player;
 
+import keystrokesmod.event.PreUpdateEvent;
 import keystrokesmod.event.SendPacketEvent;
 import keystrokesmod.module.Module;
 import keystrokesmod.module.setting.impl.ButtonSetting;
@@ -30,6 +31,7 @@ public class Blink extends Module {
     private List<Packet> blinkedPackets = new ArrayList<>();
     private Vec3 pos;
     private int color = new Color(0, 255, 0).getRGB();
+    private int blinkTicks;
     public Blink() {
         super("Blink", category.player);
         this.registerSetting(initialPosition = new ButtonSetting("Show initial position", true));
@@ -49,6 +51,7 @@ public class Blink extends Module {
         }
         blinkedPackets.clear();
         pos = null;
+        blinkTicks = 0;
     }
 
     @SubscribeEvent
@@ -66,6 +69,16 @@ public class Blink extends Module {
         }
         blinkedPackets.add(packet);
         e.setCanceled(true);
+    }
+
+    @Override
+    public String getInfo() {
+        return blinkTicks + "";
+    }
+
+    @SubscribeEvent
+    public void onPreUpdate(PreUpdateEvent e) {
+        ++blinkTicks;
     }
 
     @SubscribeEvent

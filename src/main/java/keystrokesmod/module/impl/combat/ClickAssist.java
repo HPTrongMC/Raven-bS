@@ -51,9 +51,7 @@ public class ClickAssist extends Module {
         this.bot = null;
     }
 
-    @SubscribeEvent(
-            priority = EventPriority.HIGH
-    )
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onMouseUpdate(MouseEvent ev) {
         if (disableInCreative.isToggled() && mc.thePlayer.capabilities.isCreativeMode) {
             return;
@@ -64,7 +62,11 @@ public class ClickAssist extends Module {
                 if (ev.button == 0 && leftClick.isToggled() && chanceLeft.getInput() != 0.0D) {
                     if (this.ignNL) {
                         this.ignNL = false;
-                    } else {
+                    }
+                    else {
+                        if (chanceLeft.getInput() == 0) {
+                            return;
+                        }
                         if (weaponOnly.isToggled() && !Utils.holdingWeapon()) {
                             return;
                         }
@@ -85,10 +87,15 @@ public class ClickAssist extends Module {
                         this.bot.mousePress(16);
                         this.ignNL = true;
                     }
-                } else if (ev.button == 1 && rightClick.isToggled()) {
+                }
+                else if (ev.button == 1 && rightClick.isToggled()) {
                     if (this.ignNR) {
                         this.ignNR = false;
-                    } else {
+                    }
+                    else {
+                        if (chanceRight.getInput() == 0) {
+                            return;
+                        }
                         if (blocksOnly.isToggled()) {
                             ItemStack item = mc.thePlayer.getHeldItem();
                             if (item == null || !(item.getItem() instanceof ItemBlock)) {
@@ -115,7 +122,6 @@ public class ClickAssist extends Module {
                         this.ignNR = true;
                     }
                 }
-
             }
             this.fix(0);
             this.fix(1);
@@ -127,7 +133,8 @@ public class ClickAssist extends Module {
             if (this.ignNL && !Mouse.isButtonDown(0)) {
                 this.bot.mouseRelease(16);
             }
-        } else if (t == 1 && this.ignNR && !Mouse.isButtonDown(1)) {
+        }
+        else if (t == 1 && this.ignNR && !Mouse.isButtonDown(1)) {
             this.bot.mouseRelease(4);
         }
 
