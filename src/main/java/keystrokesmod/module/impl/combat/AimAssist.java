@@ -33,7 +33,7 @@ public class AimAssist extends Module {
     public void onUpdate() {
         if (mc.currentScreen == null && mc.inGameHasFocus) {
             if (!weaponOnly.isToggled() || Utils.holdingWeapon()) {
-                if (!clickAim.isToggled() || Utils.ilc()) {
+                if (!clickAim.isToggled() || Utils.isClicking()) {
                     Entity en = this.getEnemy();
                     if (en != null) {
                         if (Raven.debugger) {

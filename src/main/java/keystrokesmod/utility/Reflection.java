@@ -10,9 +10,9 @@ import net.minecraft.client.gui.inventory.GuiFurnace;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.*;
 import net.minecraft.network.play.client.C02PacketUseEntity;
@@ -51,21 +51,15 @@ public class Reflection {
     public static Field S08PacketPlayerPosLookPitch;
     public static Field C02PacketUseEntityEntityId;
     public static Field bookContents;
+    public static Field fallDistance;
+
     public static HashMap<Class, Field> containerInventoryPlayer = new HashMap<>();
-    private static List<Class> containerClasses = new ArrayList<>();
+    private static List<Class> containerClasses = Arrays.asList(GuiFurnace.class, GuiBrewingStand.class, GuiEnchantment.class, ContainerHopper.class, GuiDispenser.class, ContainerWorkbench.class, ContainerMerchant.class, ContainerHorseInventory.class);
     public static boolean sendMessage = false;
     public static Map<KeyBinding, String> keyBindings = new HashMap<>();
 
     public static void getFields() {
         try {
-            containerClasses.add(GuiFurnace.class);
-            containerClasses.add(GuiBrewingStand.class);
-            containerClasses.add(GuiEnchantment.class);
-            containerClasses.add(ContainerHopper.class);
-            containerClasses.add(GuiDispenser.class);
-            containerClasses.add(ContainerWorkbench.class);
-            containerClasses.add(ContainerMerchant.class);
-            containerClasses.add(ContainerHorseInventory.class);
             button = MouseEvent.class.getDeclaredField("button");
             buttonstate = MouseEvent.class.getDeclaredField("buttonstate");
             buttons = Mouse.class.getDeclaredField("buttons");
@@ -96,6 +90,11 @@ public class Reflection {
             blockHitDelay = ReflectionHelper.findField(PlayerControllerMP.class, "field_78781_i", "blockHitDelay");
             if (blockHitDelay != null) {
                 blockHitDelay.setAccessible(true);
+            }
+
+            fallDistance = ReflectionHelper.findField(Entity.class, "fallDistance", "field_70143_R");
+            if (fallDistance != null) {
+                fallDistance.setAccessible(true);
             }
 
             shaderResourceLocations = ReflectionHelper.findField(EntityRenderer.class, "shaderResourceLocations", "field_147712_ad");

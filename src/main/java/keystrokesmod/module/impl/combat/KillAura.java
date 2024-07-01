@@ -484,7 +484,7 @@ public class KillAura extends Module {
                 swing = true;
                 ModuleManager.targetHUD.renderEntity = (EntityLivingBase) entity;
             }
-            if (distance > attackRange.getInput() * swingRange.getInput()) {
+            if (distance > attackRange.getInput() * attackRange.getInput()) {
                 continue;
             }
             availableTargets.add((EntityLivingBase) entity);

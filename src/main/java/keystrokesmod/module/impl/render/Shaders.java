@@ -20,7 +20,7 @@ public class Shaders extends Module {
                 shaderNames[i] = ((String[]) shaderLocations[i].getResourcePath().replaceFirst("shaders/post/", "").split("\\.json"))[0].toUpperCase();
             }
         }
-        catch (IllegalAccessException ex) {
+        catch (Exception ex) {
             ex.printStackTrace();
             return;
         }

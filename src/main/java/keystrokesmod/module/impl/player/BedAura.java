@@ -128,11 +128,11 @@ public class BedAura extends Module {
             }
         }
         if (delayStart) {
-            resetSlot();
             if (ticksAfterBreak++ <= breakTickDelay) {
                 return;
             }
             else {
+                resetSlot();
                 delayStart = false;
                 ticksAfterBreak = 0;
             }

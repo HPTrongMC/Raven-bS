@@ -38,6 +38,7 @@ public class Nametags extends Module { // skidded from raven source code as well
     private ButtonSetting showStackSize;
     private int friendColor = new Color(0, 255, 0, 255).getRGB();
     private int enemyColor = new Color(255, 0, 0, 255).getRGB();
+
     public Nametags() {
         super("Nametags", category.render, 0);
         this.registerSetting(scale = new SliderSetting("Scale", 1.0, 0.5, 5.0, 0.1));
@@ -72,8 +73,7 @@ public class Nametags extends Module { // skidded from raven source code as well
             String name;
             if (removeTags.isToggled()) {
                 name = entityPlayer.getName();
-            }
-            else {
+            } else {
                 name = entityPlayer.getDisplayName().getFormattedText();
             }
             if (showHealth.isToggled()) {
@@ -87,14 +87,11 @@ public class Nametags extends Module { // skidded from raven source code as well
                 String color = "§";
                 if (distance <= 8) {
                     color += "c";
-                }
-                else if (distance <= 15) {
+                } else if (distance <= 15) {
                     color += "6";
-                }
-                else if (distance <= 25) {
+                } else if (distance <= 25) {
                     color += "e";
-                }
-                else {
+                } else {
                     color = "";
                 }
                 name = color + distance + "m§r " + name;
@@ -105,8 +102,7 @@ public class Nametags extends Module { // skidded from raven source code as well
             GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
             if (entityPlayer == mc.thePlayer && mc.gameSettings.thirdPersonView == 2) {
                 GlStateManager.rotate(-mc.getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
-            }
-            else {
+            } else {
                 GlStateManager.rotate(mc.getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
             }
             final float n = 0.02666667f;
@@ -141,8 +137,7 @@ public class Nametags extends Module { // skidded from raven source code as well
             int y2 = 8;
             if (Utils.isFriended(entityPlayer)) {
                 RenderUtils.drawOutline(x1, y1, x2, y2, 2, friendColor);
-            }
-            else if (Utils.isEnemy(entityPlayer)) {
+            } else if (Utils.isEnemy(entityPlayer)) {
                 RenderUtils.drawOutline(x1, y1, x2, y2, 2, enemyColor);
             }
             if (drawBackground.isToggled()) {
@@ -252,8 +247,7 @@ public class Nametags extends Module { // skidded from raven source code as well
                 if (unbreakingLvl > 0) {
                     mc.fontRendererObj.drawString("ub" + unbreakingLvl, (float) (xPos * 2), (float) newYPos, -1, dropShadow.isToggled());
                 }
-            }
-            else if (stack.getItem() instanceof ItemBow) {
+            } else if (stack.getItem() instanceof ItemBow) {
                 int powerLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
                 int punchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
                 int flameLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack);
@@ -276,8 +270,7 @@ public class Nametags extends Module { // skidded from raven source code as well
                 if (unbreakingLvl > 0) {
                     mc.fontRendererObj.drawString("ub" + unbreakingLvl, (float) (xPos * 2), (float) newYPos, -1, dropShadow.isToggled());
                 }
-            }
-            else if (stack.getItem() instanceof ItemSword) {
+            } else if (stack.getItem() instanceof ItemSword) {
                 int sharpnessLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
                 int knockbackLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.knockback.effectId, stack);
                 int fireAspectLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
@@ -300,8 +293,7 @@ public class Nametags extends Module { // skidded from raven source code as well
                 if (unbreakingLvl > 0) {
                     mc.fontRendererObj.drawString("ub" + unbreakingLvl, (float) (xPos * 2), (float) newYPos, -1, dropShadow.isToggled());
                 }
-            }
-            else if (stack.getItem() instanceof ItemTool) {
+            } else if (stack.getItem() instanceof ItemTool) {
                 int unbreakingLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
                 int efficiencyLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack);
                 int fortuneLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);

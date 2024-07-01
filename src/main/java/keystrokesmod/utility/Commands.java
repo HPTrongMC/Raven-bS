@@ -225,11 +225,14 @@ public class Commands {
 
                 print("&aSet " + args[1] + " velocity to ", 1);
                 print(args[2], 0);
-            } else if (cm.startsWith("ping")) {
+            }
+            else if (cm.startsWith("ping")) {
                 Ping.checkPing();
-            } else if (cm.startsWith("clear")) {
+            }
+            else if (cm.startsWith("clear")) {
                 rs.clear();
-            } else if (cm.startsWith("hide")) {
+            }
+            else if (cm.startsWith("hide")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -247,7 +250,8 @@ public class Commands {
                         print("&a" + module.getName() + " is now hidden in HUD", 1);
                     }
                 }
-            } else if (cm.startsWith("show")) {
+            }
+            else if (cm.startsWith("show")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -265,7 +269,8 @@ public class Commands {
                         print("&a" + module.getName() + " is now visible in HUD", 1);
                     }
                 }
-            } else if (cm.startsWith("friend") || cm.startsWith("f")) {
+            }
+            else if (cm.startsWith("friend") || cm.startsWith("f")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -288,7 +293,8 @@ public class Commands {
                 } else {
                     print("&aRemoved friend: " + args[1], 1);
                 }
-            } else if (cm.startsWith("enemy") || cm.startsWith("e")) {
+            }
+            else if (cm.startsWith("enemy") || cm.startsWith("e")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -311,10 +317,12 @@ public class Commands {
                 } else {
 
                 }
-            } else if (cm.startsWith("Debug".toLowerCase())) {
+            }
+            else if (cm.startsWith("Debug".toLowerCase())) {
                 Raven.debugger = !Raven.debugger;
                 print("Debug " + (Raven.debugger ? "enabled" : "disabled") + ".", 1);
-            } else if (cm.startsWith("profiles") || cm.startsWith("p")) {
+            }
+            else if (cm.startsWith("profiles") || cm.startsWith("p")) {
                 if (!hasArgs) {
                     print("&aAvailable profiles:", 1);
                     if (Raven.profileManager.profiles.isEmpty()) {
@@ -324,13 +332,14 @@ public class Commands {
                     for (int i = 0; i < Raven.profileManager.profiles.size(); ++i) {
                         print(i + 1 + ". " + Raven.profileManager.profiles.get(i).getName(), 0);
                     }
-                } else if (args[1].equals("save") || args[1].equals("s")) {
+                }
+                else if (args[1].equals("save") || args[1].equals("s")) {
                     if (args.length != 3) {
                         print(invSyn, 1);
                         return;
                     }
                     String name = args[2];
-                    if (name.length() < 2 || name.length() > 10 || !name.chars().allMatch(Character::isLetterOrDigit)) {
+                    if (name.length() < 2 || name.length() > 10) {
                         print("&cInvalid name.", 1);
                         return;
                     }
@@ -338,7 +347,8 @@ public class Commands {
                     print("&aSaved profile:", 1);
                     print(name, 0);
                     Raven.profileManager.loadProfiles();
-                } else if (args[1].equals("load") || args[1].equals("l")) {
+                }
+                else if (args[1].equals("load") || args[1].equals("l")) {
                     if (args.length != 3) {
                         print(invSyn, 1);
                         return;

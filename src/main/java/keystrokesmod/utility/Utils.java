@@ -582,10 +582,13 @@ public class Utils {
         return str.replace("§k", "").replace("§l", "").replace("§m", "").replace("§n", "").replace("§o", "").replace("§r", "");
     }
 
-    public static boolean ilc() {
-        if (ModuleManager.autoClicker.isEnabled()) {
-            return AutoClicker.leftClick.isToggled() && Mouse.isButtonDown(0);
-        } else return CPSCalculator.f() > 1 && System.currentTimeMillis() - CPSCalculator.LL < 300L;
+    public static boolean isClicking() {
+        if (ModuleManager.autoClicker.isEnabled() && AutoClicker.leftClick.isToggled()) {
+            return Mouse.isButtonDown(0);
+        }
+        else {
+            return CPSCalculator.f() > 1 && System.currentTimeMillis() - CPSCalculator.LL < 300L;
+        }
     }
 
     public static long getDifference(long n, long n2) {

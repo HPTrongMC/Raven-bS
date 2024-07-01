@@ -193,15 +193,12 @@ public class Trajectories extends Module {
     }
 
     public void drawX() {
-        GL11.glBegin(1);
-        GL11.glVertex3d(-0.25, 0.0, 0.0);
-        GL11.glVertex3d(0.0, 0.0, 0.0);
-        GL11.glVertex3d(0.0, 0.0, -0.25);
-        GL11.glVertex3d(0.0, 0.0, 0.0);
-        GL11.glVertex3d(0.25, 0.0, 0.0);
-        GL11.glVertex3d(0.0, 0.0, 0.0);
-        GL11.glVertex3d(0.0, 0.0, 0.25);
-        GL11.glVertex3d(0.0, 0.0, 0.0);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glScalef(0.95f, 0.95f, 0.95f);
+        GL11.glVertex3d(-0.25, 0.0, 0.25);
+        GL11.glVertex3d(0.25, 0.0, -0.25);
+        GL11.glVertex3d(-0.25, 0.0, -0.25);
+        GL11.glVertex3d(0.25, 0.0, 0.25);
         GL11.glEnd();
     }
 }

@@ -40,7 +40,7 @@ public class InvManager extends Module {
     private SliderSetting projectileSlot;
     private SliderSetting speedPotionSlot;
     private SliderSetting pearlSlot;
-    private String[] ignoreItems = {"stick", "flesh", "string", "cake", "mushroom", "flint", "compass", "dyePowder", "feather", "shears", "anvil", "torch", "seeds", "leather", "skull", "record"};
+    private String[] ignoreItems = {"stick", "book", "expbottle", "flesh", "string", "cake", "mushroom", "flint", "compass", "dyePowder", "feather", "shears", "anvil", "torch", "seeds", "leather", "skull", "record"};
     private int lastStole;
     private int lastSort;
     private int lastArmor;
