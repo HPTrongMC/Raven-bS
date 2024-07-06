@@ -68,7 +68,7 @@ public class AntiBot extends Module {
         if (entityPlayer.getName().isEmpty()) {
             return true;
         }
-        if (!getTablist().contains(entityPlayer.getName()) && tablist.isToggled()) {
+        if (tablist.isToggled() && !getTablist().contains(entityPlayer.getName())) {
             return true;
         }
         if (entityPlayer.getHealth() != 20.0f && entityPlayer.getName().startsWith("§c")) {

@@ -77,7 +77,8 @@ public class Commands {
                 DuelsStats.nick = args[1];
                 print("&aNick has been set to:", 1);
                 print("\"" + DuelsStats.nick + "\"", 0);
-            } else if (cm.startsWith("cname")) {
+            }
+            else if (cm.startsWith("cname")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -91,7 +92,8 @@ public class Commands {
                 NameHider.n = args[1];
                 print("&a" + Utils.uf("name") + "Nick has been set to:".substring(4), 1);
                 print("\"" + NameHider.n + "\"", 0);
-            } else if (cm.startsWith(FakeChat.command)) {
+            }
+            else if (cm.startsWith(FakeChat.command)) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -105,7 +107,8 @@ public class Commands {
 
                 FakeChat.msg = n;
                 print("&aMessage set!", 1);
-            } else if (cm.startsWith("Duels".toLowerCase())) {
+            }
+            else if (cm.startsWith("Duels".toLowerCase())) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -184,7 +187,8 @@ public class Commands {
                 }
                 print("&aSet speed to ", 1);
                 print(args[2], 0);
-            } else if (cm.startsWith("setvelocity")) {
+            }
+            else if (cm.startsWith("setvelocity")) {
                 if (!hasArgs) {
                     print(invSyn, 1);
                     return;
@@ -292,6 +296,7 @@ public class Commands {
                     print("&aAdded friend: " + args[1], 1);
                 } else {
                     print("&aRemoved friend: " + args[1], 1);
+                    Utils.removeFriend(args[1]);
                 }
             }
             else if (cm.startsWith("enemy") || cm.startsWith("e")) {
@@ -314,8 +319,10 @@ public class Commands {
                 boolean added = Utils.addEnemy(args[1]);
                 if (!added) {
                     print("&aRemoved enemy: " + args[1], 1);
-                } else {
-
+                    Utils.removeEnemy(args[1]);
+                }
+                else {
+                    print("&aAdded enemy: " + args[1], 1);
                 }
             }
             else if (cm.startsWith("Debug".toLowerCase())) {

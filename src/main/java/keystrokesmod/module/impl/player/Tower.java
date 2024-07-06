@@ -22,6 +22,7 @@ public class Tower extends Module {
     private String[] modes = new String[]{"Vanilla"};
     private int slowTicks;
     private boolean wasTowering;
+    private int offGroundTicks;
     public Tower() {
         super("Tower", category.player);
         this.registerSetting(new DescriptionSetting("Works with Safewalk & Scaffold"));
@@ -40,10 +41,24 @@ public class Tower extends Module {
     public void onPreMotion(PreMotionEvent e) {
         if (canTower()) {
             wasTowering = true;
-            Utils.setSpeed(Math.max((diagonal() ? diagonalSpeed.getInput() : speed.getInput()) * 0.1 - 0.25, 0));
             switch ((int) mode.getInput()) {
                 case 0:
-                    mc.thePlayer.jump();
+                    offGroundTicks++;
+                    if (mc.thePlayer.onGround) {
+                        offGroundTicks = 0;
+                    }
+                    mc.thePlayer.motionY = 0.41965;
+                    switch (offGroundTicks) {
+                        case 1:
+                            mc.thePlayer.motionY = 0.33;
+                            break;
+                        case 2:
+                            mc.thePlayer.motionY = 1 - mc.thePlayer.posY % 1;
+                            break;
+                    }
+                    if (offGroundTicks >= 3) {
+                        offGroundTicks = 0;
+                    }
                     break;
             }
         }
@@ -68,6 +83,7 @@ public class Tower extends Module {
     }
 
     private void reset() {
+        offGroundTicks = 0;
     }
 
     private boolean canTower() {
@@ -92,9 +108,5 @@ public class Tower extends Module {
 
     public boolean canSprint() {
         return canTower() && this.sprintJumpForward.isToggled() && Keyboard.isKeyDown(mc.gameSettings.keyBindForward.getKeyCode()) && Utils.jumpDown();
-    }
-
-    private boolean diagonal() {
-        return (Math.abs(mc.thePlayer.motionX) > 0.05 && Math.abs(mc.thePlayer.motionZ) > 0.05);
     }
 }

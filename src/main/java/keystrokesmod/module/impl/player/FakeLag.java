@@ -6,6 +6,11 @@ import keystrokesmod.module.setting.impl.SliderSetting;
 import keystrokesmod.utility.PacketUtils;
 import keystrokesmod.utility.Utils;
 import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
+import net.minecraft.network.login.client.C01PacketEncryptionResponse;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.network.status.client.C00PacketServerQuery;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -52,6 +57,10 @@ public class FakeLag extends Module {
             return;
         }
         if (e.isCanceled()) {
+            return;
+        }
+        Packet packet = e.getPacket();
+        if (packet instanceof C00Handshake || packet instanceof C00PacketLoginStart || packet instanceof C00PacketServerQuery || packet instanceof C01PacketEncryptionResponse) {
             return;
         }
         delayedPackets.put(e.getPacket(), receiveTime);

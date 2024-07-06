@@ -56,6 +56,14 @@ public class Utils {
         return false;
     }
 
+    public static boolean removeEnemy(String name) {
+        if (enemies.remove(name.toLowerCase())) {
+            Utils.sendMessage("&Removed &cenemy&7: &b" + name);
+            return true;
+        }
+        return false;
+    }
+
     public static String getServerName() {
         return DuelsStats.nick.isEmpty() ? mc.thePlayer.getName() : DuelsStats.nick;
     }
@@ -108,6 +116,9 @@ public class Utils {
     public static boolean addFriend(String name) {
         if (friends.add(name.toLowerCase())) {
             Utils.sendMessage("&7Added &afriend&7: &b" + name);
+            if (enemies.contains(name.toLowerCase())) {
+                enemies.remove(name.toLowerCase());
+            }
             return true;
         }
         return false;

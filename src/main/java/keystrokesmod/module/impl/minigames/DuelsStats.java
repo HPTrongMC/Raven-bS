@@ -22,7 +22,7 @@ public class DuelsStats extends Module {
     public static String nick = "";
     private String ign = "";
     private String en = "";
-    private static final String[] thr_lvl;
+    private static final String[] thr_lvl = new String[]{"§4VERY HIGH", "§cHIGH", "§6MODERATE", "§aLOW", "§2VERY LOW"};
     private List<String> q = new ArrayList();
 
     public DuelsStats() {
@@ -35,10 +35,10 @@ public class DuelsStats extends Module {
     public void onEnable() {
         if (mc.thePlayer != null) {
             this.ign = mc.thePlayer.getName();
-        } else {
+        }
+        else {
             this.disable();
         }
-
     }
 
     public void onDisable() {
@@ -222,9 +222,5 @@ public class DuelsStats extends Module {
         }
 
         return thr;
-    }
-
-    static {
-        thr_lvl = new String[]{"§4VERY HIGH", "§cHIGH", "§6MODERATE", "§aLOW", "§2VERY LOW"};
     }
 }

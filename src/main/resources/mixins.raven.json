@@ -13,6 +13,8 @@
     "network.MixinNetworkManager",
     "entity.MixinEntityPlayer",
     "render.MixinRendererLivingEntity",
-    "render.MixinEntityRenderer"
+    "render.MixinEntityRenderer",
+    "network.MixinModList",
+    "client.MixinMovementInputFromOptions"
   ]
 }

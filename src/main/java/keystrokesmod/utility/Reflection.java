@@ -52,6 +52,7 @@ public class Reflection {
     public static Field C02PacketUseEntityEntityId;
     public static Field bookContents;
     public static Field fallDistance;
+    public static Field thirdPersonDistance;
 
     public static HashMap<Class, Field> containerInventoryPlayer = new HashMap<>();
     private static List<Class> containerClasses = Arrays.asList(GuiFurnace.class, GuiBrewingStand.class, GuiEnchantment.class, ContainerHopper.class, GuiDispenser.class, ContainerWorkbench.class, ContainerMerchant.class, ContainerHorseInventory.class);
@@ -100,6 +101,11 @@ public class Reflection {
             shaderResourceLocations = ReflectionHelper.findField(EntityRenderer.class, "shaderResourceLocations", "field_147712_ad");
             if (shaderResourceLocations != null) {
                 shaderResourceLocations.setAccessible(true);
+            }
+
+            thirdPersonDistance = ReflectionHelper.findField(EntityRenderer.class, "thirdPersonDistance", "field_78490_B");
+            if (thirdPersonDistance != null) {
+                thirdPersonDistance.setAccessible(true);
             }
 
             useShader = ReflectionHelper.findField(EntityRenderer.class, "useShader", "field_175083_ad");
