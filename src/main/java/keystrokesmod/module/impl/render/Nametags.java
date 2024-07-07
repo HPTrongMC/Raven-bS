@@ -205,6 +205,9 @@ public class Nametags extends Module {
             interpolatedY += entityPlayer.isSneaking() ? entityPlayer.height - 0.05 : entityPlayer.height + 0.27;
 
             double[] convertedPosition = convertTo2D(interpolatedX, interpolatedY, interpolatedZ);
+            if (convertedPosition == null) {
+                continue;
+            }
             if (convertedPosition[2] >= 0.0D && convertedPosition[2] < 1.0D) {
                 double[] headConvertedPosition = convertTo2D(interpolatedX, interpolatedY + 1.0D, interpolatedZ);
                 double height = Math.abs(headConvertedPosition[1] - convertedPosition[1]);
