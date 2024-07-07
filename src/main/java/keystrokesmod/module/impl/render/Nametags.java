@@ -10,10 +10,8 @@ import keystrokesmod.utility.RenderUtils;
 import keystrokesmod.utility.Utils;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.MathHelper;
@@ -21,19 +19,17 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import java.awt.*;
-import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Nametags extends Module { // skidded from raven source code as well
+public class Nametags extends Module {
     private SliderSetting scale;
     private ButtonSetting autoScale;
     private ButtonSetting drawBackground;
@@ -49,7 +45,6 @@ public class Nametags extends Module { // skidded from raven source code as well
     private ButtonSetting showDurability;
     private ButtonSetting showStackSize;
     private Map<EntityPlayer, double[]> entityPositions = new HashMap();
-    private Method setupCameraTransformations;
     private int backGroundColor = new Color(0, 0, 0, 65).getRGB();
     private int friendColor = new Color(0, 255, 0, 255).getRGB();
     private int enemyColor = new Color(255, 0, 0, 255).getRGB();
@@ -70,15 +65,6 @@ public class Nametags extends Module { // skidded from raven source code as well
         this.registerSetting(showEnchants = new ButtonSetting("Show enchants", true));
         this.registerSetting(showDurability = new ButtonSetting("Show durability", true));
         this.registerSetting(showStackSize = new ButtonSetting("Show stack size", true));
-
-        try {
-            this.setupCameraTransformations = ReflectionHelper.findMethod(EntityRenderer.class, mc.entityRenderer, new String[]{"func_78479_a", "setupCameraTransform"}, float.class, int.class);
-        }
-        catch (Exception e) {}
-
-        if (this.setupCameraTransformations != null) {
-            this.setupCameraTransformations.setAccessible(true);
-        }
     }
 
     @SubscribeEvent
@@ -133,8 +119,8 @@ public class Nametags extends Module { // skidded from raven source code as well
             GlStateManager.translate(renderPositions[0], renderPositions[1], 0);
             int strWidth = mc.fontRendererObj.getStringWidth(name) / 2;
             GlStateManager.color(0.0F, 0.0F, 0.0F);
-            double scaleSetting = scale.getInput() * 10;
             double rawScaleSetting = scale.getInput();
+            double scaleSetting = rawScaleSetting * 10;
             double nameTagScale = twoDScale * scaleSetting;
             final float renderPartialTicks = Utils.getTimer().renderPartialTicks;
             final EntityPlayer player = (Freecam.freeEntity == null) ? mc.thePlayer : Freecam.freeEntity;
@@ -146,10 +132,10 @@ public class Nametags extends Module { // skidded from raven source code as well
                 if (renderSelf.isToggled() && entityPlayer == mc.thePlayer) {
                     distance = 3;
                 }
-                nameTagScale = rawScaleSetting / (distance / 10);
+                nameTagScale = rawScaleSetting / (Math.max(distance, 3) / 10);
             }
             else {
-                distance = Math.max(0.7, Math.min(1 - (0.01 * distance), 1));
+                distance = Math.min(1, Math.max(0.7, 1 - (0.012 * Math.max(distance, 1))));
                 nameTagScale *= distance;
             }
             GlStateManager.scale(nameTagScale, nameTagScale, nameTagScale);
@@ -211,46 +197,20 @@ public class Nametags extends Module { // skidded from raven source code as well
             if (entityPlayer.getDisplayNameString().isEmpty() || (entityPlayer != mc.thePlayer && AntiBot.isBot(entityPlayer))) {
                 continue;
             }
-            double x = entityPlayer.lastTickPosX + (entityPlayer.posX - entityPlayer.lastTickPosX) * pTicks - mc.getRenderManager().viewerPosX;
-            double y = entityPlayer.lastTickPosY + (entityPlayer.posY - entityPlayer.lastTickPosY) * pTicks - mc.getRenderManager().viewerPosY;
-            double z = entityPlayer.lastTickPosZ + (entityPlayer.posZ - entityPlayer.lastTickPosZ) * pTicks - mc.getRenderManager().viewerPosZ;
-            y += (entityPlayer.isSneaking() ? entityPlayer.height - 0.05 : entityPlayer.height + 0.27);
-            if (convertTo2D(x, y, z)[2] >= 0.0D) {
-                if (convertTo2D(x, y, z)[2] < 1.0D) {
-                    entityPositions.put(entityPlayer, new double[]{convertTo2D(x, y, z)[0], convertTo2D(x, y, z)[1], Math.abs(convertTo2D(x, y + 1.0D, z, entityPlayer)[1] - convertTo2D(x, y, z, entityPlayer)[1]), convertTo2D(x, y, z)[2]});
-                }
+
+            double interpolatedX = entityPlayer.lastTickPosX + (entityPlayer.posX - entityPlayer.lastTickPosX) * pTicks - mc.getRenderManager().viewerPosX;
+            double interpolatedY = entityPlayer.lastTickPosY + (entityPlayer.posY - entityPlayer.lastTickPosY) * pTicks - mc.getRenderManager().viewerPosY;
+            double interpolatedZ = entityPlayer.lastTickPosZ + (entityPlayer.posZ - entityPlayer.lastTickPosZ) * pTicks - mc.getRenderManager().viewerPosZ;
+
+            interpolatedY += entityPlayer.isSneaking() ? entityPlayer.height - 0.05 : entityPlayer.height + 0.27;
+
+            double[] convertedPosition = convertTo2D(interpolatedX, interpolatedY, interpolatedZ);
+            if (convertedPosition[2] >= 0.0D && convertedPosition[2] < 1.0D) {
+                double[] headConvertedPosition = convertTo2D(interpolatedX, interpolatedY + 1.0D, interpolatedZ);
+                double height = Math.abs(headConvertedPosition[1] - convertedPosition[1]);
+                entityPositions.put(entityPlayer, new double[]{convertedPosition[0], convertedPosition[1], height, convertedPosition[2]});
             }
         }
-    }
-    private double[] convertTo2D(double x, double y, double z, Entity ent) {
-        final float pTicks = Utils.getTimer().renderPartialTicks;
-        float prevYaw = mc.thePlayer.rotationYaw;
-        float prevPrevYaw = mc.thePlayer.prevRotationYaw;
-        float[] rotations = getRotationFromPosition(
-                ent.lastTickPosX + (ent.posX - ent.lastTickPosX) * pTicks,
-                ent.lastTickPosZ + (ent.posZ - ent.lastTickPosZ) * pTicks,
-                ent.lastTickPosY + (ent.posY - ent.lastTickPosY) * pTicks - 1.6D);
-        Entity renderViewEntity = mc.getRenderViewEntity();
-        Entity renderViewEntity2 = mc.getRenderViewEntity();
-        float n = rotations[0];
-        renderViewEntity2.prevRotationYaw = n;
-        renderViewEntity.rotationYaw = n;
-        if (setupCameraTransformations != null) {
-            try {
-                setupCameraTransformations.invoke(mc.entityRenderer, pTicks, 0);
-            }
-            catch (Exception e) {}
-        }
-        double[] convertedPoints = convertTo2D(x, y, z);
-        mc.getRenderViewEntity().rotationYaw = prevYaw;
-        mc.getRenderViewEntity().prevRotationYaw = prevPrevYaw;
-        if (setupCameraTransformations != null) {
-            try {
-                setupCameraTransformations.invoke(mc.entityRenderer, pTicks, 0);
-            }
-            catch (Exception e) {}
-        }
-        return convertedPoints;
     }
 
     private double[] convertTo2D(double x, double y, double z) {
@@ -266,16 +226,6 @@ public class Nametags extends Module { // skidded from raven source code as well
             return new double[] { screenCoords.get(0), org.lwjgl.opengl.Display.getHeight() - screenCoords.get(1), screenCoords.get(2) };
         }
         return null;
-    }
-
-    public static float[] getRotationFromPosition(double x, double z, double y) {
-        double xDiff = x - mc.thePlayer.posX;
-        double zDiff = z - mc.thePlayer.posZ;
-        double yDiff = y - mc.thePlayer.posY - 1.2;
-        double dist = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
-        float yaw = (float)(Math.atan2(zDiff, xDiff) * 180.0D / 3.141592653589793D) - 90.0F;
-        float pitch = (float)-(Math.atan2(yDiff, dist) * 180.0D / 3.141592653589793D);
-        return new float[] { yaw, pitch };
     }
 
     private void renderArmor(EntityPlayer e) {

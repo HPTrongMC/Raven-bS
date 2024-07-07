@@ -161,7 +161,14 @@ public class RotationUtils {
         final float sin = MathHelper.sin(n4 - 3.1415927f);
         final float n6 = -MathHelper.cos(n5);
         final Vec3 vec3 = new Vec3(sin * n6, MathHelper.sin(n5), cos * n6);
-        return mc.theWorld.rayTraceBlocks(getPositionEyes, getPositionEyes.addVector(vec3.xCoord * distance, vec3.yCoord * distance, vec3.zCoord * distance), false, false, false);
+        return mc.theWorld.rayTraceBlocks(getPositionEyes, getPositionEyes.addVector(vec3.xCoord * distance, vec3.yCoord * distance, vec3.zCoord * distance), false, false, true);
+    }
+
+    public static MovingObjectPosition rayTraceCustom(double blockReachDistance, float yaw, float pitch) {
+        final Vec3 vec3 = mc.thePlayer.getPositionEyes(1.0F);
+        final Vec3 vec31 = getVectorForRotation(pitch, yaw);
+        final Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return mc.theWorld.rayTraceBlocks(vec3, vec32, false, false, true);
     }
 
     public static Vec3 getVectorForRotation(float pitch, float yaw) {

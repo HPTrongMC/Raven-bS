@@ -24,7 +24,6 @@ import org.lwjgl.input.Mouse;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static net.minecraft.util.EnumFacing.DOWN;
@@ -193,25 +192,13 @@ public class KillAura extends Module {
                             mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(Raven.badPacketsHandler.playerSlot = mc.thePlayer.inventory.currentItem));
                             swapped = false;
                         }
-                        attackAndInteract(target, swingWhileBlocking);
+                        attackAndInteract(target, swingWhileBlocking, false);
                         sendBlock();
                         releasePackets();
                         lag = true;
                     }
                     break;
                 case 4:
-                    if (lag) {
-                        blinking = true;
-                        unBlock();
-                        lag = false;
-                    }
-                    else {
-                        attackAndInteract(target, swingWhileBlocking);
-                        sendBlock();
-                        releasePackets();
-                        lag = true;
-                    }
-                    break;
                 case 5:
                     if (lag) {
                         blinking = true;
@@ -219,7 +206,7 @@ public class KillAura extends Module {
                         lag = false;
                     }
                     else {
-                        attackAndInteract(target, swingWhileBlocking); // attack while blinked
+                        attackAndInteract(target, swingWhileBlocking, autoBlockMode.getInput() == 5); // attack while blinked
                         releasePackets(); // release
                         sendBlock(); // block after releasing unblock
                         lag = true;
@@ -540,10 +527,13 @@ public class KillAura extends Module {
         return true;
     }
 
-    private void attackAndInteract(EntityLivingBase target, boolean swingWhileBlocking) {
+    private void attackAndInteract(EntityLivingBase target, boolean swingWhileBlocking, boolean predict) {
         if (target != null && attack) {
             attack = false;
             if (!aimingEntity()) {
+                return;
+            }
+            if (predict && target.hurtResistantTime > 16) {
                 return;
             }
             switchTargets = true;
